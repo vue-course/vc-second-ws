@@ -160,6 +160,18 @@ class BoardsService {
 	}
 
 	/**
+	 * get task by id
+	 * @param id
+	 * @returns {Promise<{id: string, stage: string, title: string}>}
+	 */
+	getTask(id) {
+		return getDB()
+			.then(db => {
+				return db.tasks.find(task => task.id !== id);
+			});
+	}
+
+	/**
 	 *
 	 * @param id
 	 */
