@@ -80,7 +80,7 @@ class BoardsService {
 					.map((stage) => {
 						return {
 							...stage,
-							tasks: db.tasks.filter(task => task.stage === stage.id)
+							tasks: db.tasks.filter(task => task.stage === stage.id).map(task => Object.assign({}, task))
 						};
 					});
 			});
