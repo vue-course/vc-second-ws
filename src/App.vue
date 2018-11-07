@@ -3,9 +3,9 @@
 		<div class="inline">
 			<img src="./assets/logo.png">
 			<div>Add new task:&nbsp; </div>
-			<TaskEditor :task="newTask" @update="addTask"></TaskEditor>
+			<TaskEditor :task="newTask" :stages="stages" @update="addTask"></TaskEditor>
 		</div>
-		<BoardStages :stages="stages"></BoardStages>
+		<BoardStages :stages="stages" @update-stage="stageUpdated" @update-task="taskUpdated"></BoardStages>
 	</div>
 </template>
 <script>
@@ -33,17 +33,21 @@
 					return alert('Please add stages first');
 				}
 				BoardService
-					.setTask({
-						...task,
-						stage: this.stages[0].id
-					})
+					.setTask(task)
 					.then(() => this.newTask = {})
 					.then(() => this.getStages());
+			},
+			stageUpdated() {
+				this.getStages();
+			},
+			taskUpdated() {
+				this.getStages();
 			},
 			getStages() {
 				BoardService
 					.getStages()
 					.then(stages => this.stages = stages)
+					.then(() => this.stages.length && (this.newTask = {title: '', stage: this.stages[0].id}))
 			}
 		}
 	};

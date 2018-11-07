@@ -3,7 +3,11 @@
 		<h2>Board Stages</h2>
 		<StageEditor :stage="newStage" @update="stagesUpdated"></StageEditor>
 		<div class="stages-list">
-			<Stage v-for="stage in stages" :stage="stage"></Stage>
+			<Stage v-for="stage in stages"
+			       :stage="stage"
+			       @update-stage="existingStagesUpdated"
+			       @update-task="existingTaskUpdated"
+			></Stage>
 		</div>
 	</div>
 </template>
@@ -30,7 +34,14 @@
 
 				BoardService.setStage(newStage).then(stage => {
 					this.stages.push(stage);
+					this.$emit('update-stage', stage);
 				});
+			},
+			existingStagesUpdated(updatedStage) {
+				this.$emit('update-stage', updatedStage);
+			},
+			existingTaskUpdated(updatedTask) {
+				this.$emit('update-task', updatedTask);
 			}
 		}
 	}

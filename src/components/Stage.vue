@@ -1,7 +1,7 @@
 <template>
 	<div class="stage">
 		<StageEditor :stage="stage" @update="updateStage" :view-mode="true"></StageEditor>
-		<TaskEditor v-for="task in stage.tasks" :task="task" :view-mode="true"></TaskEditor>
+		<TaskEditor v-for="task in stage.tasks" :task="task" :view-mode="true" @update="updateTask"></TaskEditor>
 	</div>
 </template>
 
@@ -21,7 +21,12 @@
 			updateStage(stage) {
 				BoardService
 					.setStage(stage)
-					.then(() => this.$emit('update', this.stage));
+					.then(() => this.$emit('update-stage', this.stage));
+			},
+			updateTask(task) {
+				BoardService
+					.setTask(task)
+					.then(() => this.$emit('update-task', task));
 			}
 		}
 	}
