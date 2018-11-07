@@ -15,7 +15,6 @@
 </template>
 
 <script>
-	import {BoardService} from "../services/boards-service";
 
 	export default {
 		name: 'TaskEditor',
@@ -56,7 +55,7 @@
 		},
 		methods: {
 			updateOptionalStages() {
-				return BoardService
+				return this.$boards
 					.getStages()
 					.then(stages => this._optionalStages = stages || []);
 			},

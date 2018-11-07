@@ -14,7 +14,6 @@
 	</div>
 </template>
 <script>
-	import {BoardService} from '../services/boards-service';
 	import CreateBoardForm from "../components/CreateBoardForm";
 
 	export default {
@@ -29,7 +28,7 @@
 		},
 		methods: {
 			getBoards() {
-				BoardService.getBoards().then(boards => this.boards = boards);
+				this.$boards.getBoards().then(boards => this.boards = boards);
 			}
 		}
 	};

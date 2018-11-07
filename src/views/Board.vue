@@ -9,7 +9,6 @@
 	</div>
 </template>
 <script>
-	import {BoardService} from '../services/boards-service';
 	import TaskEditor from '../components/TaskEditor.vue';
 	import BoardStages from '../components/BoardStages.vue';
 
@@ -35,7 +34,7 @@
 				if(!this.stages.length) {
 					return alert('Please add stages first');
 				}
-				BoardService
+				this.$boards
 					.setTask(task)
 					.then(() => this.newTask = {})
 					.then(() => this.getStages());
@@ -47,7 +46,7 @@
 				this.getStages();
 			},
 			getStages() {
-				BoardService
+				this.$boards
 					.getStages(this.$route.params.id)
 					.then(stages => this.stages = stages)
 					.then(() => this.stages.length && (this.newTask = {title: '', stage: this.stages[0].id}))

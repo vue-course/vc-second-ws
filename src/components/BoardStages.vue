@@ -13,7 +13,6 @@
 </template>
 
 <script>
-	import {BoardService} from '../services/boards-service';
 	import Stage from "./Stage.vue";
 	import StageEditor from "./StageEditor";
 
@@ -32,7 +31,7 @@
 			stagesUpdated(newStage) {
 				this.newStage = {name: 'New Stage'};
 
-				BoardService.setStage(newStage).then(stage => {
+				this.$boards.setStage(newStage).then(stage => {
 					this.stages.push(stage);
 					this.$emit('update-stage', stage);
 				});

@@ -7,8 +7,6 @@
 
 <script>
 
-	import {BoardService} from '../services/boards-service';
-
 	export default {
 		name: 'CreateBoardForm',
 		data() {
@@ -16,7 +14,7 @@
 		},
 		methods: {
 			save() {
-				return BoardService
+				return this.$boards
 					.setBoard({name: this.name})
 					.then((board) => this.$emit('update', board))
 					.then(() => this.name = '');

@@ -7,7 +7,6 @@
 
 <script>
 
-	import {BoardService} from '../services/boards-service';
 	import TaskEditor from "./TaskEditor.vue";
 	import StageEditor from "./StageEditor.vue";
 
@@ -19,12 +18,12 @@
 		},
 		methods: {
 			updateStage(stage) {
-				BoardService
+				this.$boards
 					.setStage(stage)
 					.then(() => this.$emit('update-stage', this.stage));
 			},
 			updateTask(task) {
-				BoardService
+				this.$boards
 					.setTask(task)
 					.then(() => this.$emit('update-task', task));
 			}

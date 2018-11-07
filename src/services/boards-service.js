@@ -64,7 +64,7 @@ function getUUID() {
 }
 
 
-class BoardsService {
+export class BoardsService {
 
 	/**
 	 * get all boards
@@ -249,5 +249,3 @@ class BoardsService {
 	}
 
 }
-
-export const BoardService = new BoardsService;

@@ -5,7 +5,6 @@
 	</div>
 </template>
 <script>
-	import {BoardService} from '../services/boards-service';
 	import TaskEditor from '../components/TaskEditor.vue';
 
 	export default {
@@ -27,12 +26,12 @@
 		},
 		methods: {
 			addTask(task) {
-				return BoardService
+				return this.$boards
 					.setTask(task)
 					.then(() => this.$router.push('/'));
 			},
 			getData() {
-				BoardService.getStages()
+				this.$boards.getStages()
 					.then(stages => this.stages = stages)
 					.then(() => this.getTaskData())
 					.then(() => this.loading = false);
@@ -41,7 +40,7 @@
 				if (this.$route.params.id === 'new') {
 					this.task = {title: 'add new task', stage: this.stages[0].id};
 				} else {
-					return BoardService.getTask(this.$route.params.id).then(task => this.task = task);
+					return this.$boards.getTask(this.$route.params.id).then(task => this.task = task);
 				}
 			}
 		}
