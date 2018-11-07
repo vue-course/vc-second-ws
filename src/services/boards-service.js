@@ -144,7 +144,8 @@ class BoardsService {
 			.then(db => {
 				if (id) {
 					updatedTask = db.tasks.find(task => task.id === id);
-					updatedTask.title = name;
+					if(stage) updatedTask.stage = stage;
+					if(title) updatedTask.title = title;
 				} else {
 					updatedTask = {id: getUUID(), stage, title};
 					db.tasks.push(updatedTask);
