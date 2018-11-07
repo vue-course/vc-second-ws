@@ -1,7 +1,7 @@
 <template>
 	<div class="board">
 		<div class="inline">
-			<img src="./assets/logo.png">
+			<img src="../assets/logo.png">
 			<div>Add new task:&nbsp; </div>
 			<TaskEditor :task="newTask" :stages="stages" @update="addTask"></TaskEditor>
 		</div>
@@ -9,9 +9,9 @@
 	</div>
 </template>
 <script>
-	import {BoardService} from './services/boards-service';
-	import TaskEditor from './components/TaskEditor.vue';
-	import BoardStages from './components/BoardStages.vue';
+	import {BoardService} from '../services/boards-service';
+	import TaskEditor from '../components/TaskEditor.vue';
+	import BoardStages from '../components/BoardStages.vue';
 
 	export default {
 		components: {

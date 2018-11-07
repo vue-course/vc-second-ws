@@ -1,9 +1,11 @@
 <template>
 	<div>
 		<div class="error" v-if="error">{{error}}</div>
-		<div class="inline-task" v-else-if="showViewMode" @dblclick="editFromInlineMode">{{task.title}}</div>
+		<div class="inline-task" v-else-if="showViewMode">
+			<router-link :to="{name: 'task', params: {id: task.id}}">{{task.title}}</router-link>
+		</div>
 		<form v-else class="task-form" @submit.prevent="save">
-			<input type="text" v-model="task.title" @keyup.esc="escaped">
+			<input type="text" v-model="task.title">
 			<select v-model="task.stage">
 				<option v-for="stage in optionalStages" :value="stage.id">{{stage.name}}</option>
 			</select>
@@ -63,12 +65,6 @@
 					this.currentViewModeState = true;
 				}
 				this.$emit('update', this.task);
-			},
-			escaped() {
-				if (this.viewMode) {
-					this.currentViewModeState = true;
-					this.task.title = this.initialTaskTitle;
-				}
 			},
 			editFromInlineMode() {
 				this.currentViewModeState = false;

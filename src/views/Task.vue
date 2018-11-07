@@ -1,53 +1,48 @@
 <template>
-	<div class="board">
-		<div class="inline">
-			<img src="../assets/logo.png">
-			<div>Add new task:&nbsp; </div>
-			<TaskEditor :task="newTask" :stages="stages" @update="addTask"></TaskEditor>
-		</div>
-		<BoardStages :stages="stages" @update-stage="stageUpdated" @update-task="taskUpdated"></BoardStages>
+	<div class="task">
+		<router-link to="/">Back</router-link>
+		<TaskEditor v-if="!loading" :task="task" :stages="stages" @update="addTask"></TaskEditor>
 	</div>
 </template>
 <script>
 	import {BoardService} from '../services/boards-service';
 	import TaskEditor from '../components/TaskEditor.vue';
-	import BoardStages from '../components/BoardStages.vue';
 
 	export default {
 		components: {
 			TaskEditor,
-			BoardStages
 		},
 		data() {
 			return {
-				newTask: {title: ''},
+				loading: true,
+				task: {},
 				stages: []
 			};
 		},
 		mounted() {
-			this.getStages();
+			this.getData();
+		},
+		beforeRouteUpdate() {
+			this.getData();
 		},
 		methods: {
 			addTask(task) {
-				if(!this.stages.length) {
-					return alert('Please add stages first');
-				}
-				BoardService
+				return BoardService
 					.setTask(task)
-					.then(() => this.newTask = {})
-					.then(() => this.getStages());
+					.then(() => this.$router.push('/'));
 			},
-			stageUpdated() {
-				this.getStages();
-			},
-			taskUpdated() {
-				this.getStages();
-			},
-			getStages() {
-				BoardService
-					.getStages()
+			getData() {
+				BoardService.getStages()
 					.then(stages => this.stages = stages)
-					.then(() => this.stages.length && (this.newTask = {title: '', stage: this.stages[0].id}))
+					.then(() => this.getTaskData())
+					.then(() => this.loading = false);
+			},
+			getTaskData() {
+				if (this.$route.params.id === 'new') {
+					this.task = {title: 'add new task', stage: this.stages[0].id};
+				} else {
+					return BoardService.getTask(this.$route.params.id).then(task => this.task = task);
+				}
 			}
 		}
 	};
