@@ -66,14 +66,21 @@ function getUUID() {
 
 class BoardsService {
 
+	/**
+	 * get all boards
+	 * @returns {Promise<Array<{id: string, name: string}>>}
+	 */
+	getBoards() {
+		return getDB().then(db => db.boards);
+	}
 
 	/**
-	 *
+	 * @param boardId: string
 	 * @returns {Promise<Array<{id: string, name: string, tasks: Array}>>}
 	 */
-	getStages() {
+	getStages(boardId) {
 		return Promise
-			.all([getDB(), getBoard()])
+			.all([getDB(), boardId ? this.getBoard(boardId) : getBoard()])
 			.then(([db, board]) => {
 				return db.stages
 					.filter(stage => stage.board === board.id)
@@ -87,18 +94,47 @@ class BoardsService {
 	}
 
 	/**
+	 * create / update board
+	 * @param id: string
+	 * @param name: string
+	 * @returns {Promise<{id: string, name: string}>}
+	 */
+	setBoard({id, name}) {
+		const isNew = !id;
+		let updatedBoard;
+		if (isNew) {
+			id = getUUID();
+		}
+		return getDB()
+			.then((db) => {
+				if (isNew) {
+					updatedBoard = {id, name};
+					db.boards.push(updatedBoard);
+				} else {
+					updatedBoard = db.boards.find(board => board.id === id);
+					updatedBoard.name = name;
+				}
+				updatedBoard = {...updatedBoard};
+				return db;
+			})
+			.then(setDB)
+			.then(() => updatedBoard);
+	}
+
+	/**
 	 *
 	 * @param id: string
 	 * @param name: string
+	 * @param board: string
 	 * @returns {Promise<{id: string, name: string, tasks: Array}>}
 	 */
-	setStage({id, name}) {
+	setStage({id, name, board}) {
 		const isNew = !id;
 		let updatedStage;
 		if (isNew) {
 			id = getUUID();
 		}
-		return Promise.all([getDB(), getBoard()])
+		return Promise.all([getDB(), board ? this.getBoard(board) : getBoard()])
 			.then(([db, board]) => {
 				if (isNew) {
 					updatedStage = {id, name, board: board.id};
@@ -117,6 +153,49 @@ class BoardsService {
 			.then(() => updatedStage);
 	}
 
+
+	/**
+	 *
+	 * @param id: string | undefined
+	 * @param stage: string
+	 * @param title: string
+	 * @returns {Promise<{boards: Array, stages: Array, tasks: Array} | never>}
+	 */
+	setTask({id, stage, title}) {
+		let updatedTask;
+		return getDB()
+			.then(db => {
+				if (id) {
+					updatedTask = db.tasks.find(task => task.id === id);
+					if (stage) updatedTask.stage = stage;
+					if (title) updatedTask.title = title;
+				} else {
+					updatedTask = {id: getUUID(), stage, title};
+					db.tasks.push(updatedTask);
+				}
+
+				updatedTask = {...updatedTask};
+				return db;
+			})
+			.then(setDB)
+			.then(() => updatedTask);
+
+	}
+
+	/**
+	 *
+	 * @param id
+	 */
+	deleteBoard(id) {
+		return getDB()
+			.then(db => {
+				db.boards = db.boards.filter(board => board.id !== id);
+				return db;
+			})
+			.then(setDB)
+			.then(() => true);
+	}
+
 	/**
 	 *
 	 * @param id
@@ -133,30 +212,28 @@ class BoardsService {
 
 	/**
 	 *
-	 * @param id: string | undefined
-	 * @param stage: string
-	 * @param title: string
-	 * @returns {Promise<{boards: Array, stages: Array, tasks: Array} | never>}
+	 * @param id
 	 */
-	setTask({id, stage, title}) {
-		let updatedTask;
+	deleteTask(id) {
 		return getDB()
 			.then(db => {
-				if (id) {
-					updatedTask = db.tasks.find(task => task.id === id);
-					if(stage) updatedTask.stage = stage;
-					if(title) updatedTask.title = title;
-				} else {
-					updatedTask = {id: getUUID(), stage, title};
-					db.tasks.push(updatedTask);
-				}
-
-				updatedTask = {...updatedTask};
+				db.tasks = db.tasks.filter(task => task.id !== id);
 				return db;
 			})
 			.then(setDB)
-			.then(() => updatedTask);
+			.then(() => true);
+	}
 
+	/**
+	 * get board by id
+	 * @param id
+	 * @returns {Promise<{id: string, name: string}>}
+	 */
+	getBoard(id) {
+		return getDB()
+			.then(db => {
+				return db.boards.find(board => board.id === id);
+			});
 	}
 
 	/**
@@ -169,20 +246,6 @@ class BoardsService {
 			.then(db => {
 				return db.tasks.find(task => task.id === id);
 			});
-	}
-
-	/**
-	 *
-	 * @param id
-	 */
-	deleteTask(id) {
-		return getDB()
-			.then(db => {
-				db.tasks = db.tasks.filter(task => task.id !== id);
-				return db;
-			})
-			.then(setDB)
-			.then(() => true);
 	}
 
 }
