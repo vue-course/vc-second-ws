@@ -167,7 +167,7 @@ class BoardsService {
 	getTask(id) {
 		return getDB()
 			.then(db => {
-				return db.tasks.find(task => task.id !== id);
+				return db.tasks.find(task => task.id === id);
 			});
 	}
 
