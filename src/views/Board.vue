@@ -1,7 +1,7 @@
 <template>
 	<div class="board">
 		<div class="inline">
-			<img src="../assets/logo.png">
+			<router-link to="/"><img src="../assets/logo.png"></router-link>
 			<div>Add new task:&nbsp; </div>
 			<TaskEditor :task="newTask" :stages="stages" @update="addTask"></TaskEditor>
 		</div>
@@ -27,6 +27,9 @@
 		mounted() {
 			this.getStages();
 		},
+		beforeRouteUpdate() {
+			this.getStages();
+		},
 		methods: {
 			addTask(task) {
 				if(!this.stages.length) {
@@ -45,7 +48,7 @@
 			},
 			getStages() {
 				BoardService
-					.getStages()
+					.getStages(this.$route.params.id)
 					.then(stages => this.stages = stages)
 					.then(() => this.stages.length && (this.newTask = {title: '', stage: this.stages[0].id}))
 			}
