@@ -4,6 +4,7 @@
 		<StageEditor :stage="newStage" @update="stagesUpdated"></StageEditor>
 		<div class="stages-list">
 			<Stage v-for="stage in stages"
+			       :key="stage.id"
 			       :stage="stage"
 			       @update-stage="existingStagesUpdated"
 			       @update-task="existingTaskUpdated"
@@ -21,7 +22,8 @@
 		name: 'BoardStages',
 		components: {StageEditor, Stage},
 		props: {
-			stages: Array
+			stages: Array,
+			board: String,
 		},
 		data() {
 			return {
@@ -30,7 +32,8 @@
 		},
 		methods: {
 			stagesUpdated(newStage) {
-				this.newStage = {name: 'New Stage'};
+				newStage.board = this.board;
+				this.newStage = {name: 'New Stage', board: this.board};
 
 				BoardService.setStage(newStage).then(stage => {
 					this.stages.push(stage);
