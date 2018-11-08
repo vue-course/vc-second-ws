@@ -5,7 +5,7 @@
 			<div>Add new task:&nbsp; </div>
 			<TaskEditor :task="newTask" :stages="stages" @update="addTask"></TaskEditor>
 		</div>
-		<BoardStages :stages="stages" @update-stage="stageUpdated" @update-task="taskUpdated"></BoardStages>
+		<BoardStages :stages="stages" :board="$route.params.id" @update-stage="stageUpdated" @update-task="taskUpdated"></BoardStages>
 	</div>
 </template>
 <script>
