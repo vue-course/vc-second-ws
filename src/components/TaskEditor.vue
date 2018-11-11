@@ -65,12 +65,6 @@
 				}
 				this.$emit('update', this.task);
 			},
-			editFromInlineMode() {
-				this.currentViewModeState = false;
-				if (!this.stages) {
-					this.updateOptionalStages();
-				}
-			}
 		}
 	}
 </script>
