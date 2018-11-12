@@ -239,12 +239,18 @@ class BoardsService {
 	/**
 	 * get task by id
 	 * @param id
-	 * @returns {Promise<{id: string, stage: string, title: string}>}
+	 * @returns {Promise<{id: string, stage: string, title: string, board: string}>}
 	 */
 	getTask(id) {
 		return getDB()
 			.then(db => {
-				return db.tasks.find(task => task.id === id);
+				const task = db.tasks.find(task => task.id === id);
+				const stage = db.stages.find(stage => stage.id === task.stage);
+
+				return {
+					...task,
+					board: stage.board
+				};
 			});
 	}
 
