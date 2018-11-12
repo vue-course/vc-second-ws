@@ -31,14 +31,14 @@
 					.then(() => this.$router.push('/'));
 			},
 			getData() {
-				this.$boards.getStages()
+				this.getTaskData()
+					.then(() => this.$boards.getStages(this.task.board))
 					.then(stages => this.stages = stages)
-					.then(() => this.getTaskData())
 					.then(() => this.loading = false);
 			},
 			getTaskData() {
 				if (this.$route.params.id === 'new') {
-					this.task = {title: 'add new task', stage: this.stages[0].id};
+					this.task = {title: 'add new task', stage: this.stages[0].id, board: this.stages[0].board};
 				} else {
 					return this.$boards.getTask(this.$route.params.id).then(task => this.task = task);
 				}

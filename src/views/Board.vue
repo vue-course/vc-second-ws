@@ -24,10 +24,10 @@
 			};
 		},
 		mounted() {
-			this.getStages();
+			this.updateData();
 		},
 		beforeRouteUpdate() {
-			this.getStages();
+			this.updateData();
 		},
 		methods: {
 			addTask(task) {
@@ -37,19 +37,19 @@
 				this.$boards
 					.setTask(task)
 					.then(() => this.newTask = {})
-					.then(() => this.getStages());
+					.then(() => this.updateData());
 			},
 			stageUpdated() {
-				this.getStages();
+				this.updateData();
 			},
 			taskUpdated() {
-				this.getStages();
+				this.updateData();
 			},
-			getStages() {
+			updateData() {
 				this.$boards
 					.getStages(this.$route.params.id)
 					.then(stages => this.stages = stages)
-					.then(() => this.stages.length && (this.newTask = {title: '', stage: this.stages[0].id}))
+					.then(() => this.stages.length && (this.newTask = {title: '', stage: this.stages[0].id, board: this.stages[0].board}))
 			}
 		}
 	};
