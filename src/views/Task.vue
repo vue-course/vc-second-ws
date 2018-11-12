@@ -29,7 +29,7 @@
 			addTask(task) {
 				return BoardService
 					.setTask(task)
-					.then(() => this.$router.push('/'));
+					.then(() => this.$router.push({name: 'board', params: {id: this.task.board}}));
 			},
 			getData() {
 				this.getTaskData()
